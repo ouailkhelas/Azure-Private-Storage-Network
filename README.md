@@ -1,114 +1,62 @@
-## 📋 Overview
+# Azure Secure Storage with Private Endpoint
 
-This project demonstrates how to securely access an Azure Storage Account through a Private Endpoint, eliminating public exposure. All traffic flows within Azure's private backbone network, ensuring high security, low latency, and compliance with modern cloud standards.
+## 🚀 Overview
 
-## 🧱 Architecture
+This project demonstrates a secure Azure Storage architecture using **Private Endpoint** to eliminate public exposure and enforce private-only access inside a Virtual Network (VNet). All communication with the Storage Account is routed through Azure’s private backbone network for improved security and compliance.
 
-The solution consists of the following components:
+All resources were created manually using the **Azure Portal**, and at the final stage, the infrastructure was exported as a **Bicep template** for analysis and documentation purposes.
 
-- **Storage Account** → Target service (Blob, File, Queue, Table)
-- **Private Endpoint** → Provides a private IP address inside the VNet
-- **Network Interface (NIC)** → Linked to the Private Endpoint
-- **Virtual Network (VNet)** → Isolated network environment
-- **Network Security Group (NSG)** → Controls inbound/outbound traffic
+---
 
-### 🔄 Traffic Flow
+## ✅ What I Built
 
-```
-Client (inside VNet)
-        ⬇
+- 1 Azure Storage Account (Blob, File, Queue, Table)
+- 1 Private Endpoint for secure internal access
+- 1 Virtual Network (isolated environment)
+- 1 Subnet dedicated to Private Endpoint
+- 1 Network Security Group (NSG)
+- 1 Network Interface (NIC linked to Private Endpoint)
+- Private DNS Zone for name resolution
+
+---
+
+## 📍 Architecture Flow
+Client VM (Inside VNet)
+↓
+Private DNS Resolution
+↓
 Private Endpoint (Private IP)
-        ⬇
-Storage Account (No public access)
-```
+↓
+Azure Storage Account (Public access disabled)
 
-## ✨ Features
 
-- 🔒 **Private access only** — No public endpoint exposure
-- 🌐 **Full network isolation** — Using Azure Virtual Network
-- 🛡️ **Traffic filtering** — Controlled via Network Security Groups
-- ⚡ **Optimized performance** — Traffic routed through Azure backbone
-- 📦 **Secure communication** — All Storage services accessible privately
+---
 
-## 🛠️ Azure Services Used
+## 🛠️ Technologies Used
 
 - Azure Storage Account
-- Azure Private Endpoint
+- Azure Private Endpoint (Private Link)
 - Azure Virtual Network (VNet)
 - Azure Network Security Group (NSG)
-- Azure Network Interface (NIC)
+- Azure Private DNS Zone
+- Azure Network Interface
 
-## 🚀 Deployment
-
-### Prerequisites
-
-- Azure CLI installed
-- Active Azure subscription
-- Appropriate permissions to create resources
-
-### Using Bicep
-
-1. **Create a resource group:**
-
-```bash
-az group create --name rg-private-storage --location francecentral
-```
-
-2. **Deploy the infrastructure:**
-
-```bash
-az deployment group create \
-  --resource-group rg-private-storage \
-  --template-file main.bicep
-```
-
-## 🔐 Security Design
-
-| Component | Configuration |
-|-----------|---------------|
-| **Public network access** | Disabled |
-| **Access method** | Private Endpoint only |
-| **NSG rules** | Allow internal VNet traffic<br>Deny external/public traffic |
-| **Encryption** | In-transit and at-rest |
-
-## 🧪 Validation
-
-Follow these steps to validate your deployment:
-
-1. ✅ Verify Private Endpoint has a private IP assigned
-2. ✅ Test access from a VM inside the VNet (should succeed)
-3. ❌ Test access from the internet (should fail)
-
-### Example validation commands:
-
-```bash
-# Check Private Endpoint IP
-az network private-endpoint show \
-  --resource-group rg-private-storage \
-  --name <endpoint-name> \
-  --query 'customDnsConfigs[0].ipAddresses[0]'
-
-# Test connectivity from a VM in the VNet
-az storage blob list \
-  --account-name <storage-account-name> \
-  --container-name <container-name>
-```
-
-## 🎯 Use Cases
-
-- Secure cloud storage for enterprise applications
-- Internal microservices communication
-- Compliance-focused architectures (HIPAA, GDPR, etc.)
-- Data residency and sovereignty requirements
-- Zero-trust network architectures
-
-## 📚 Additional Resources
-
-- [Azure Private Endpoint Documentation](https://docs.microsoft.com/azure/private-link/private-endpoint-overview)
-- [Azure Storage Security Guide](https://docs.microsoft.com/azure/storage/common/storage-security-guide)
-- [Azure Bicep Documentation](https://docs.microsoft.com/azure/azure-resource-manager/bicep/)
-
-## 👤 Author
-
-**Ouail Mokhtar Khelas**
 ---
+
+## 🏗️ How I Built It
+
+1/All resources were created manually using **Azure Portal**:
+2/Created Virtual Network (VNet)
+3/Created Subnet for Private Endpoint
+4/Deployed Storage Account
+5/Disabled public network access
+6/Created Private Endpoint
+7/NIC was auto-provisioned
+8/Configured NSG rules
+9/Configured Private DNS Zone
+
+At the end of the deployment:
+
+- Exported **Bicep template** from Azure Portal  
+- Used it only for analysis and understanding IaC structure  
+- Deployment was NOT done using Bicep (portal-based build)
